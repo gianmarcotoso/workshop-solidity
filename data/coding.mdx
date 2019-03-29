@@ -1,0 +1,65 @@
+export { default as theme } from './theme'
+
+# Ethereum
+
+## Ambiente di Sviluppo
+
+---
+
+# Sviluppare nel browser
+
+È possibile sviluppare e testare Smart Contract direttamente nel browser,
+usando ReMix, un tool messo a disposizione dalla Ethereum Foundation
+all'indirizzo [https://remix.ethereum.org](https://remix.ethereum.org).
+
+---
+
+# Sviluppare in locale
+
+Per sviluppare i contratti in locale è fortemenete consigliato l'uso della
+Truffle Suite. Inizializzare un progetto con `truffle` è semplice:
+
+```
+$ npm init my-project -y
+$ cd my-project && npx truffle init
+```
+
+**Attenzione!** È necessario avere installato NodeJS e gli strumenti necessari
+a compilare codice C++!
+
+---
+
+# Esercizio 1
+
+Sviluppare un contratto `HelloWorld` che esponga una funzione `greet` richiamabile dall'esterno. Questa funzione deve restituire la stringa "Hello, World!".
+
+---
+
+# Esercizio 2
+
+Sviluppare un contratto `Donation` che sia in grado di ricevere degli ETH su una funzione `donate`, e salvi la quantità di ETH ricevuti da ogni indirizzo sullo stato del contratto. Inoltre, chiamando la funzione `balance`, dovrà essere possibile ricevere il totale donato dall'indirizzo chiamante.
+
+---
+
+# Esercizio 3
+
+Estendendo il contratto `Donation`, implementare il contratto `CollectableDonation`, che aggiunge la possibilità al proprietario del contratto di chiamare la funzione `withdraw`, che distrugge il contratto e manda al proprietario tutti gli ETH ricevuti.
+
+---
+
+# Esercizio 4
+
+Un'azienda vuole registrare i suoi fornitori su Ethereum. Implementare il contratto `SupplierTrust`, con le seguenti logiche:
+
+-   Un fornitore deve potersi registrare chiamando la funzione `register`, che riceve il nome del fornitore come parametro e salva il nome del fornitore in una struttura appropriata;
+-   Il proprietario del contratto deve poter ricevere una notifica, attraverso un evento, quando un fornitore si registra;
+-   Il proprietario del contratto deve poter attivare un fornitore attraverso la funzione `activateSupplier`, che riceve l'indirizzo del fornitore come parametro;
+
+---
+
+# Esercizio 5
+
+L'azienda vuole ora permettere ai fornitori attivi di caricare le firme digitali di documenti scambiati su canali tradizionali. Modificare il contratto `SupplierTrust` affinché:
+
+-   Un fornitore attivo possa chiamare la funzione `addSignature`, passando due stringhe (nome, firma) come parametri. La funzione aggiungerà la firma ad un apposito mapping sulla `struct` del fornitore;
+-   Il proprietario del contratto possa chiamare la funzione `getSignatureFrom`, passando l'indirizzo fornitore e il nome del documento, e ricevere la firma corretta;

@@ -1,0 +1,187 @@
+export { default as theme } from './theme'
+
+# Ethereum
+
+## Cenni di Sicurezza
+
+Per informazioni più dettagliate:
+
+-   https://solidity.readthedocs.io/en/develop/security-considerations.html
+-   https://consensys.github.io/smart-contract-best-practices/
+
+---
+
+# Bisogna essere preparati a tutto
+
+Ogni contratto può contenere bug più o meno gravi, più o meno evidenti. Quando un errore viene
+individuato, è importante saper reagire in maniera appropriata. Bisogna:
+
+-   Avere un percorso di pubblicazione ben definito
+-   Aver previsto un percorso di aggiornamento per il contratto
+-   Essere in grado di sospendere l'esecuzione del contratto
+-   Prevedere tempi lunghi per operazioni delicate
+-   Prevedere l'approvazione per operazioni delicate
+
+---
+
+# Pubblicazione
+
+Prima di pubblicare un contratto, è **fondamentale** effettuare un appropriato
+iter di testing per avere la ragionevole certezza che non ci siano errori che
+possano comprometterne la sicurezza (e la sicurezza dei fondi eventualmente
+contenuti).
+
+Oltre ai test programmatici, è anche importante prevedere la
+pubblicazione del contratto su testnet private e pubbliche, con eventuali
+bug bounties. È anche possibile la pubblicazione sulla mainnet in _beta_.
+
+---
+
+# Aggiornamento
+
+È importante essere preparati all'eventualità che un contratto abbia degli errori
+o richieda di essere aggiornato. Questo può essere fatto, per esempio, mantenendo
+un registro di indirizzi del contratto oppure utilizzando un contratto proxy, che
+punta all'ultima versione del contratto.
+
+---
+
+# Sospendere l'esecuzione
+
+Quando un errore viene reso palese, una possibile tattica è quella di implementare
+un _circuit breaker_ per sospendere l'esecuzione del contratto ed impedire che
+eventuali attaccanti possano effettuare azioni di disturbo o causare danni.
+
+---
+
+import { FullScreenCode } from 'mdx-deck/layouts'
+
+export default FullScreenCode
+
+```
+contract Stoppable {
+    address private owner;
+    bool private stopped;
+    constructor() public { owner = msg.sender; }
+    modifier isAdmin {
+        require(owner == msg.sender);
+        _;
+    }
+    modifier isRunning {
+        require(!stopped);
+        _;
+    }
+    function toggleStop() public isAdmin {
+        stopped = !stopped;
+    }
+}
+```
+
+---
+
+# Rallentamenti Programmati
+
+Alcune operazioni particolarmente delicate possono beneficiare dell'introduzione
+di un rallentamento programmato.
+
+Un prelievo di fondi da un contratto potrebbe, ad esempio, prevedere una fase di **richiesta** di prelievo, che prepara i fondi
+per l'invio al richiedente, e una fase di prelievo vera e propria che tuttavia non
+può avvenire prima di `n` giorni dalla richiesta.
+
+Questa strategia permetterebbe agli amministratori, in caso di azioni malevole,
+di avere tempo sufficiente ad intervenire e mettere al sicuro fondi che sarebbero
+altrimenti persi per sempre.
+
+---
+
+# Approvazione
+
+In maniera simile a quanto fatto con il rallentamento programmato, la richiesta
+di approvazione potrebbe, anziché imporre un limite di tempo fisso, richiedere
+l'approvazione di un amministratore per ogni prelievo superiore ad una certa
+somma.
+
+---
+
+# Considerazioni tecniche
+
+Oltre a considerazioni relative al processo di pubblicazione e manutenzione
+di un contratto, è necessario tenere in considerazione alcune questioni tecniche.
+Alcune sono strettamente legate all'uso della blockchain, altre sono comuni a
+tutta la dottrina dell'informatica.
+
+---
+
+# Overflow / Underflow
+
+Quando si effettuano somme o sottrazioni, è sempre **fondamentale** e **necessario**
+tenere a mente che possono verificarsi overflow o underflow, e che queste situazioni
+possono **compromettere seriamente** la sicurezza e l'affidabilità di un contratto.
+
+Si pensi al caso in cui la variable `balance`, di tipo `uint8`, è apri a `0`.
+Un'operazione come `balance--;` porterebbe la balance da `0` a `255` a causa
+di un underflow!
+
+---
+
+# Visibilità delle funzioni
+
+Non tutte le funzioni devono essere `public` o `external`, ma solamente quelle
+che vogliamo vengano effettivamente chiamate attraverso una transazione o
+programmaticamente da un altro contratto. Esporre una visibilità non corretta può
+portare a una superficie di attacco più ampia sul contratto, ed è quindi
+importante valutare con attenzione quali funzioni rendere pubbliche.
+
+---
+
+# Controllo degli errori
+
+Quando si effettuano chiamate ad altre funzioni o a contratti esterni, è sempre
+**imprescindibile** controllare che la funzione chiamata abbia correttamente
+completato la sua esecuzione, evitando così situazioni di inconsistenza che
+possono esporre il contratto a comportamenti non previsti.
+
+---
+
+# [Re-entrancy](https://solidity.readthedocs.io/en/develop/security-considerations.html#re-entrancy)
+
+Dal momento che un contratto può chiamare un altro contratto, è anche possibile che su
+un contratto siano depositati degli ETH marchiati come di proprietà di un contratto malevolo.
+
+Nel caso in cui il flusso di prelievo di questi fondi sia vulnerabile, è possibile che il
+contratto malevolo prenda il controllo del flusso di esecuzione del codice del nostro
+contratto, [risultando in un prelievo **totale** dei fondi.](https://medium.com/altcoin-magazine/security-considerations-while-developing-ethereum-smart-contracts-in-solidity-aed8970341c3)
+
+---
+
+export default FullScreenCode
+
+```
+contract MyContract {
+    mapping (address => uint) private userBalances;
+    function withdraw() public {
+        uint amountToWithdraw = userBalances[msg.sender];
+        require(msg.sender.call.value(amountToWithdraw)());
+
+        userBalances[msg.sender] = 0;
+    }
+}
+contract Evil {
+    function() public payable {
+        MyContract c = MyContract(msg.sender);
+        c.withdraw();
+    }
+}
+```
+
+---
+
+# Visibilità dei dati
+
+Quando si usa una blockchain pubblica bisogna ricordarsi che **tutti i dati** sono pubblici e,
+potenzialmente, visibili da chiunque. Questo comprende:
+
+-   Le variabili di storage segnate come `private` o `internal`;
+-   Il contenuto delle transazioni verso il contratto e i parametri passati alle chiamate (`calldata`);
+-   L'elenco delle transazioni e gli indirizzi degli account chiamanti;
+-   Il bytecode di ogni contratto pubblicato (che è [decompilabile](https://ethervm.io/decompile))

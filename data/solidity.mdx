@@ -1,0 +1,481 @@
+export { default as theme } from './theme'
+
+# Ethereum
+
+## Solidity
+
+---
+
+# Caratteristiche del linguaggio
+
+Solidity è un linguaggio ad alto livello che viene compilato a **bytecode**,
+il quale a sua volta può essere eseguito da una EVM. Il linguaggio ha la
+caratteristica di essere **staticamente tipizzato** e **orientato a
+oggetti**. I file che rappresentano codice Solidity hanno estensione `.sol`.
+
+---
+
+import { FullScreenCode } from 'mdx-deck/layouts'
+export default FullScreenCode
+
+```cpp
+pragma solidity >=0.5.0;
+
+contract HelloWorld {
+    function sayHello() public pure returns (string memory) {
+        return "Hello, World!";
+    }
+}
+```
+
+---
+
+# `pragma`
+
+Dal momento che il linguaggio è in continua evoluzione, è necessario
+specificare la versione del compilatore che si vuole utilizzare per
+compilare il codice di un dato contratto. Questo viene fatto utilizzando
+la parola chiave `pragma`, in testa ad ogni file `.sol`.
+
+---
+
+# `contract`
+
+La parola chiave contract serve a definire un **contratto**, in maniera
+simile a come la parola chiave **class** è usata in altri linguaggi per
+definire una classe.
+
+Dopo la parola chiave `contract` è sempre obbligatorio specificare il
+nome del contratto.
+
+```
+contract HelloWorld { /* ... */ }
+```
+
+---
+
+# Ereditarietà
+
+Solidity supporta ereditarietà multipla, per cui è possibile creare un
+contratto ereditando da uno o più contratti definiti altrove, utilizzando
+la parola chiave `is`.
+
+È possibile importare risorse esterne utilizzando la parola chiave
+`import`, seguita dal percorso della risorsa racchiuso tra virgolette.
+
+```
+import 'path/to/another/contract.sol'
+
+contract HelloWorld is AnotherContract { /* ... */ }
+```
+
+---
+
+# `function`
+
+Un contratto può contenere una o più **funzioni**, definite utilizzando
+la parola chiave `function` seguita dal nome della funzione. Una
+funzione può ricevere dei parametri, deve avere dei modificatori
+che ne specificano la visibilità e il comportamento, e può restituire
+una **o più** variabili.
+
+```
+function sayHello() public pure returns (string memory) {
+    /* ... */
+}
+```
+
+---
+
+# `function`
+
+```
+function sumAndMultiply(uint a, uint b)
+    public pure returns (uint, uint) {
+    return (a + b, a * b);
+}
+/* OPPURE */
+function sumAndMultiply(uint a, uint b)
+    public pure returns (uint sum, uint mul) {
+    sum = a + b;
+    mul = a * b;
+}
+```
+
+---
+
+# Qualificatori di visibilità
+
+Ogni funzione **deve** essere definita assieme ad un qualificatore
+di visibilità. I qualificatori di visibilità disponibili sono:
+
+-   `public`: la funzione è invocabile attraverso una transazione o
+    da un altro contratto;
+-   `external`: la funzione è invocabile solamente attraverso una transazione;
+-   `internal`: la funzione è invocabile da un'altra funzione del contratto, o
+    da un qualunque contratto che lo eredita;
+-   `private`: la funzione è invocabile solamente all'interno del contratto,
+    e non da altri contratti (nemmeno i figli);
+
+---
+
+# Modificatori
+
+In Solidity, un modificatore è uno strumento che permette di modificare il comportamento
+di una funzione in maniera dichiarativa. Esistono alcuni modificatori built-in, come:
+
+-   `pure`: indica che la funzione non modificherà, né leggerà, lo stato del contratto;
+-   `view`: indica che la funzione non modificherà, ma leggerà, lo stato del contratto;
+-   `payable`: indica che la funzione può riceve ETH in ingresso
+
+---
+
+# Modificatori
+
+È possibile definire modificatori personalizzati per incapsulare logica comune tra più
+funzioni:
+
+```
+modifier lessThanFive(uint number) {
+    require(number < 5);
+    _;
+}
+
+function myFunction(uint number)
+    external lessThanFive(number) returns (string memory) {
+    return "Hello!";
+}
+```
+
+---
+
+# Modificatori
+
+Il codice di un modificatore può contenere qualunque tipo di operazione, fintanto
+che ogni possibile percorso del codice scritto termini nell'esecuzione della funzione
+a cui è applicato, attraverso l'uso del carattere `_`, o nel lancio di un'eccezione.
+
+---
+
+# Variabili
+
+In Solidity esistono due tipi di varaibili, i **value types** e i **reference types**.
+I **value types** sono tutti quelle variaibli che contengono il valore a loro assegnato
+direttamente nell'area di memoria a loro assegnata nella EVM; i **reference types** sono
+invece tutte le variabili il cui valore è puntato attraverso un puntatore.
+
+---
+
+# Value Types
+
+Quando assegnamo un valore ad una variabile di questo tipo, il valore viene inserito
+direttamente nell'area di memoria dedicata alla variabile. Se effettuiamo una copia,
+viene creata una nuova area di memoria per all'interno della quale il valore viene
+_copiato_.
+
+---
+
+# Value Types
+
+I value types in solidity sono:
+
+-   `bool`: valori booleani, quindi `true` o `false`;
+-   `uint`: numeri interi senza segno;
+-   `int` numeri interi con segno;
+-   `address`: indirizzi di account;
+-   `byte`: variabili contenenti uno o più byte;
+-   `enum`: enumerazioni;
+
+---
+
+# Value Types
+
+Alcuni value type sono disponibili in più varianti:
+
+-   `uint` può essere anche utilizzato come `uint8`, `uint16`, ..., in base alla dimensione
+    dei numeri che dovrà contenere;
+-   `int` può essere anche utilizzato come `int8`, `int16`, ..., in base alla dimensione
+    dei numeri che dovrà contenere;
+-   `byte` è in realtà un alias per `bytes1`, e sono disponibili tutti i tipi da `bytes1` a
+    `bytes32`, in base a quanti byte vogliamo rappresentare nella variabile;
+
+---
+
+# Reference Types
+
+Ogni variabile di questo tipo contiene in realtà un _puntatore_ ad un'area di memoria
+dove inizia la rappresentazione del dato, che tipicamente occuperà aree di memoria multiple
+contigue tra loro. Effettuando una copia, verrà copiato il _puntatore_ e non il contenuto
+della memoria a cui punta: questo significa che ogni modifica fatta sulla variabile
+originale impatterà anche eventuali copie (e vice versa).
+
+---
+
+# Reference Types
+
+I reference types in Solidity sono:
+
+-   Tutti gli array, quindi `uint[]`, `int[]`, `byte[]`, `address[]` ;
+-   `bytes`: un tipo speciale simile a `byte[]`, ma i cui valori sono "compressi".
+-   `string`: simile a `bytes`, ma codifica una stringa in UTF-8;
+
+> As a rule of thumb, use bytes for arbitrary-length raw byte data and string
+> for arbitrary-length string (UTF-8) data. If you can limit the length to a
+> certain number of bytes, always use one of bytes1 to bytes32 because they
+> are much cheaper.
+
+---
+
+# Data Location
+
+L'uso della memoria in Solidity deve essere gestito con attenzione, dal momento che
+tipi diversi di memoria hanno un costo diverso, e un uso improprio può portare a un
+costo di esecuzione del contratto molto alto.
+
+---
+
+# Data Location
+
+I tipi di allocazioni possibili in solidity sono 4:
+
+-   `storage`: tutte la variabili salvate in _storage_ persistono sulla blockchain ed il loro
+    valore può essere letto da chiunque. Si può equiparare
+    lo storage ad una memoria globale condivisa, ed è in assoluto la più costosta da utilizzare;
+-   `memory`: memoria locale all'esecuzione di una specifica funzione, viene cancellata al
+    termine dell'esecuzione e può contenere valori complessi (`array`, `string`);
+-   `calldata`: payload di una transazione inviata ad un contratto che contiene i parametri
+    necessari a chiamare una sua funzione;
+-   `stack` memoria locale ad una funzione che contiene valori semplici (`int`, `bool`);
+
+---
+
+# Data Location
+
+L'uso di `storage` va limitato solo per quelle informazioni che devono persistere nel
+tempo (lo stato del contratto); per tutti gli altri casi (e per eventuali operazioni
+transitorie su variabili in storage) è consigliato utilizzare `memory` o `stack`
+(implicito). `calldata` serve solo per i parametri di funzioni `public` o `external`
+che durante la loro esecuzione scrivono in `storage`.
+
+---
+
+# Data Location
+
+Tutte le assegnazioni tra `memory` e `storage` creano **sempre** una copia, indipendentemente dal tipo di variabile, così come tutte le assegnazioni di una variabile `storage` in una variabile locale. Le assegnazioni tra `memory` e `memory` invece copiano il puntatore, non il contenuto.
+
+---
+
+# `struct`
+
+È possibile definire dei tipi "contenitori" sotto forma di `struct`. Una struct contiene al
+suo interno una o più variabili, e può essere utilizzata per definire una variabile che
+conterrà ogni variabile della struct come "membro":
+
+```
+struct Person {
+    string name;
+    uint8 age;
+}
+
+Person billy = Person({ name: "Billy", age: 20 });
+```
+
+---
+
+# `enum`
+
+Un `enum` può essere usato per astrarre una sequenza di valori interi, dando loro un significato utile a meglio comprendere il flusso del codice.
+
+```
+enum SubscriptionStatus { NotSubscribed, Subscribed }
+```
+
+---
+
+# `mappings`
+
+In Solidity, un mapping rappresenta un dizionario chiave valore dove sia la chiave che il valore possono avere un tipo arbitrario. Dal momento che i loop sono costosi
+in termini di Gas, usare un mapping riduce il costo di esecuzione di un contratto. I mapping non sono, tuttavia, iterabili.
+
+```
+mapping(address => Person) people;
+```
+
+---
+
+# `address`
+
+Il tipo address è un _value type_ all'interno del quale può essere salvato l'indirizzo di un account. Gli `address` possono essere di due tipi: `address` o `address payable`. L'unica differenza tra i due tipi di `address` è che quelli indicati come `address payable` espongono i metodi `send` e `transfer` e possono ricevere ETH da un contratto.
+
+Dal momento che un `address` può rappresentare sia un EOA che un contratto, su ogni istanza sono presenti i metodi `balance` e `call` (oltre che altri metodi per chiamate più a basso livello).
+
+---
+
+# Built-in globali
+
+Ogni contratto ha accesso ad una serie di oggetti e metodi globali che permettono di
+accedere a informazioni sulla transazione o effettuare operazioni particolari. L'elenco completo è disponibile [qui](https://solidity.readthedocs.io/en/v0.5.6/units-and-global-variables.html#special-variables-and-functions).
+
+---
+
+# Proprietà del blocco e della transazione
+
+-   `msg.value` contiene il valore in `wei` inviato nella transazione;
+-   `msg.sender` contiene l'indirizzo (`address payable`) di chi ha effettuato la chiamata;
+-   `msg.data` contiene il calldata;
+-   `now` contiene il timestamp del blocco (alias di `block.timestamp`);
+-   `tx.origin` contiene l'indirizzo (`address payable`) di chi ha iniziato la transazione;
+
+---
+
+# Accesso al contratto
+
+Ogni contratto espone la sua istanza sulla variabile `this`. Utilizzando questa variabile, è possibile risalire all'indirizzo del contratto effettuando un cast: `address(this)`.
+
+È anche possibile distruggere il contratto e inviare tutti gli ETH in esso contenuti utilizzando la funzione `selfdestruct`, che riceve come unico parametro un `address payable`:
+
+```
+// Winning the jackpot...
+selfdestruct(msg.sender);
+```
+
+---
+
+# Error Handling
+
+Per gestire gli errori è possibile interrompere l'esecuzione del codice e lanciare un'eccezione. Solidity mette a disposizione una serie di funzioni per controllare in che modo il contratto deve fallire.
+
+---
+
+# `require`
+
+```
+require(myNumber > 5, "The number is too low!");
+```
+
+La funzione `require` lancia un'eccezione con il messaggio specificato come secondo parametro se la condizione passata come primo parametro **non è** verificata, e riporta lo stato dello `storage` a quello iniziale (prima di eseguire la transazione). Il passaggio di un messaggio è opzionale.
+
+Questa funzione restituisce il gas non utilizzato all'account chiamante.
+
+---
+
+# `revert`
+
+```
+revert("I'm not feeling too well...");
+```
+
+La funzione `revert` lancia un'eccezione con il messaggio indicato (opzionale) e riporta lo stato dello `storage` a quello iniziale.
+
+Questa funzione restituisce il gas non utilizzato all'account chiamante.
+
+---
+
+# `assert`
+
+```
+assert(myValue > 0);
+```
+
+La funzione `assert` lancia un'eccezione se la condizione non è verificata, e riporta lo stato dello `storage` a quello iniziale. Dal momento che questa funzione **non restituisce** il gas all'account chiamante, è importante utilizzarla solo per controllare invarianti (o in strumenti di test).
+
+---
+
+# Eventi
+
+Su un contratto è possibile definire **eventi**, che verranno propagati a tutti i nodi in ascolto e possono essere utilizzati per tenere traccia di operazioni interne al contratto, effettuare logging o ricevere lo stato di una transazione prima che questa venga scritta sulla blockchain.
+
+---
+
+# Eventi
+
+```
+contract PremiumSubscription {
+    event hasSubscribed(address subscriber);
+
+    function subscribe() external payable {
+        //... subscription logic
+        emit hasSubscribed(msg.sender);
+    }
+}
+```
+
+---
+
+# Eventi
+
+Un evento è definito come una funzione, ma utilizza la parola chiave `event` e non ha né modificatori né un corpo. Per scatenare un evento è sufficiente "chiamarlo" come se fosse una funzione, prependendo la keyword `emit`.
+
+---
+
+# Costruttore
+
+A differenza di altri linguaggi, il costruttore di un contratto in Solidity viene chiamato quando il contratto viene scritto _sulla blockchain_. Questo significa che è possibile utilizzare il costruttore per effettuare operazioni uniche, dal momento che non potrà mai più essere chiamato. Un esempio tipico è quello dell'assegnazione di un proprietario al contratto.
+
+---
+
+export default FullScreenCode
+
+```
+contract OwnedContract {
+    address payable internal owner;
+
+    constructor() public {
+        owner = msg.sender;
+    }
+
+    modifier isOwner {
+        require(msg.sender == owner);
+        _;
+    }
+}
+```
+
+---
+
+# Costruttore
+
+Un costruttore può essere chiamato attraverso una transazione di deploy o da un altro contratto. In entrambi i casi un nuovo contratto verrà inserito sulla blockchain, e il suo indirizzo verrà reso noto come risultato della transazione.
+
+---
+
+# Self Destruct
+
+Per rendere possibile la disattivazione permanente di un contratto, è possibile utilizzare il metodo `selfdestruct`. Tale metodo riceve come unico parametro l'indirizzo dell'account sul quale verranno inviati tutti gli ETH conservati sull'account del contratto.
+
+---
+
+export default FullScreenCode
+
+```
+contract Destroyable {
+    address payable internal owner;
+
+    constructor() public {
+        owner = msg.sender;
+    }
+
+    modifier isOwner {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function destroy() external isOwner {
+        selfdestruct(owner);
+    }
+}
+
+```
+
+---
+
+# Fallback function
+
+Uno Smart Contract può avere esattamente una funzione anonima, detta anche
+"fallback function". Questa funzione viene chiamata quando il contratto riceve
+una transazione come se fosse un EOA o quando riceve una chiamata per un
+identificatore non presente.
+
+Se indicata come `payable`, la fallback function fa sì che il contratto possa
+riceve ETH attraverso normali pagamenti (e può implementare una logica in risposta
+degli stessi).

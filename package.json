@@ -1,0 +1,22 @@
+{
+	"name": "corso-solidity",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "mdx-deck data/slides.js",
+		"build": "mdx-deck build data/slides.js --no-html"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"file-loader": "^3.0.1",
+		"mdx-deck": "^2.0.0",
+		"url-loader": "^1.1.2"
+	},
+	"dependencies": {
+		"typeface-crimson-text": "0.0.72"
+	}
+}

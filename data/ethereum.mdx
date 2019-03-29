@@ -1,0 +1,159 @@
+export { default as theme } from './theme'
+
+# Ethereum
+
+## Fondamenti Teorici
+
+---
+
+# Cos'è Ethereum?
+
+Ethereum è una piattaforma di computing distribuita basata su
+blockchain sulla quale è possibile eseguire dei programmi chiamati
+_Smart Contract_.
+
+---
+
+# Smart Contract
+
+Uno _Smart Contract_ è un codice eseguibile attraverso il quale
+è possibile eseguire qualunque tipo di operazione e persisterne
+il risultato sulla blockchain Ethereum. Gli Smart Contract sono
+scritti utilizzando un linguaggio chiamato _Solidity_.
+
+---
+
+# Ether (ETH)
+
+Il token della piattaforma Ethereum è denominato **Ether**. Ogni
+miner che aggiunge un blocco alla blockchain è remunerato in ETH,
+e tutte le operazioni effettuato all'interno di uno Smart Contract
+costano una certa quantità di ETH.
+
+---
+
+# Wei
+
+ETH è una valuta frazionabile, e la sua più piccola unità è
+denominata **wei**. Un singolo **wei** corrisponde ad 1 \* 10<sup>-18</sup>
+ETH.
+
+---
+
+# Gas
+
+Dal momento che ogni operazione all'interno di uno Smart Contract
+costa una certa quantità di ETH, ma il valore di ETH subisce
+fluttuazioni anche significative nel corso di periodi molto brevi,
+è stato introdotto il concetto di **Gas** per mitigare il problema
+della variabilità del costo delle operazioni.
+
+---
+
+# Gas Cost, Price e Limit
+
+Ogni operazione all'interno di uno Smart Contract ha un costo fisso
+e predeterminato in Gas, detto **Gas Cost**. Quando un account
+vuole eseguire uno Smart Contract, specifica anche il costo, in **wei**,
+che vuole dare ad ogni unità di Gas (**Gas Price**) e la quantità
+massima di Gas che vuole spendere per quella chiamata (**Gas Limit**).
+
+---
+
+# Gas Cost, Price e Limit
+
+Grazie al costo fisso delle operazioni in termini di **Gas Cost** e alla
+possibilità di regolare **Gas Price** e **Gas Limit** è possibile mitigare
+l'impatto delle fluttuazioni di ETH sul costo dell'esecuzione degli
+Smart Contract.
+
+---
+
+# Block Gas Limit
+
+Ogni blocco ha un limite massimo possibile di Gas consumato tra tutte
+le transazioni inserite. Questo limite non è fisso, ma varia ogni blocco
+ed il nuovo valore è votato dai miners.
+
+---
+
+# EVM
+
+La EVM (Ethereum Virtual Machine) è la componente di runtime della rete
+Ethereum, ed è formalmente definita nel "Yellow Paper". Esistono numerose
+implementazioni della EVM in linguaggi come C++, Go, Rust, Haskell, Javascript
+e molti altri.
+
+---
+
+# Account Ethereum
+
+Esistono due tipologie di account sulla rete Ethereum: gli **Externally Owned
+Accounts** e i **Contract Accounts**
+
+---
+
+# Externally Owned Accounts (EOA)
+
+Un EOA è un account in possesso di un individuo, ed è rappresentato da una coppia
+di chiavi pubblica/privata. L'identificazione di un EOA avviene attraverso un
+"indirizzo", che è determinato a partire dai primi 20 byte della chiave pubblica.
+
+Possedere la chiave privata di un EOA permette di firmare transazioni con quell'
+account, e quindi di fruire degli ETH (e dei token) ad esso associati.
+
+---
+
+# Contract Account
+
+Un Contract Account è un account identificato da un indirizzo, esattamente come
+un EOA, ma la cui chiave privata non è nota. Un Contract Account può avere ad
+esso associati ETH o token, ma il suo scopo principale è quello di contenere il
+codice di un contratto, che verrà eseguito ogni volta che una transazione è
+inviata al suo indirizzo da un EOA o da un altro Contract Account.
+
+---
+
+# Transazioni
+
+Una transazione, sulla blockchain Ethereum, può rappresentare un certo numero di
+eventi:
+
+-   Lo scambio di ETH tra un EOA e un altro EOA
+-   Lo scambio di ETH tra un EOA e un Contract Account
+-   Lo scambio di ETH tra un Contract Account e un EOA
+-   Lo scambio di ETH tra due Contract Account
+-   Il deploy di uno Smart Contract
+-   La chiamata di una funzione su uno Smart Contract
+
+---
+
+# Transazioni
+
+Ogni transazione ha delle proprietà che la compongono, tra cui:
+
+-   `from` rappresenta l'indirizzo dell'account che ha _iniziato_ la tx
+-   `to` rappresenta l'indirizzo dell'account di destinazione della tx
+    (non valorizzato nel caso di deploy)
+-   `value` rappresenta la quantità di wei trasferiti nella tx
+
+---
+
+# Smart Contracts
+
+Uno Smart Contract rappresenta una logica scritta sulla blockchain Ethereum
+che può essere eseguita da uno o più account. Uno Smart Contract, oltre che
+codificare la logica, può anche persistere delle informazioni sulla blockchain
+e accedervi, inviare e ricevere denaro (sotto forma di ETH), implementare
+delle unità di scambio (sotto forma di token) ed effettuare il deploy di o
+chiamare funzioni su altri Smart Contract.
+
+---
+
+# Ethereum Network
+
+La rete Ethereum principale, sulla quale vengono eseguite le transazioni
+reali e vengono pubblicati i contratti reali, è anche nota come **Main Net**.
+Oltre alla Main Net esistono anche delle reti di test, dette **Test Net**, ed
+è anche possibile creare delle reti private o di consorzio basate sulla
+tecnologia Ethereum.

@@ -1,0 +1,187 @@
+export { default as theme } from './theme'
+
+# Introduzione
+
+## La Blockchain
+
+---
+
+# Cos'è una blockchain?
+
+È un registro _distribuito_, _decentralizzato_ e _immutabile_, i cui dati sono
+inseriti in blocchi successivi e la cui consistenza è garantita attraverso
+meccanismi di consenso tra i nodi.
+
+---
+
+# Decentralizzazione
+
+<img src={require('assets/distributed-decentralized.png')} />
+
+La logica di esecuzione ed i dati sono **decentralizzati**,
+ovvero replicati su ogni server collegato alla rete.
+
+---
+
+# Distribuzione
+
+<img src={require('assets/distributed-decentralized.png')} />
+
+Ogni nodo della rete ha una connessione verso tutti gli altri nodi
+della rete, e non esiste un "nodo centrale".
+
+---
+
+# Immutabilità
+
+Una volta inserito un dato, non è possibile né eliminarlo né modificarlo.
+
+---
+
+# Vantaggi di una blockchain
+
+-   Nessun ente di controllo "centralizzato" (zero trust)
+-   Nessun "single point of failure"
+-   Alta disponibilità dei dati
+
+---
+
+# Svantaggi di una blockchain
+
+-   Tempi di accesso tipicamente lunghi
+-   Costi potenzialmente alti
+
+---
+
+# Cenni di Crittografia
+
+---
+
+<img src={require('assets/wiki.png')} style={{ height: 200 }} />
+
+> La crittografia o criptografia (dal greco κρυπτóς [kryptós], "nascosto", e
+> γραφία [graphía], "scrittura") è la branca della crittologia che tratta delle
+> "scritture nascoste", ovvero dei metodi per rendere un messaggio "offuscato"
+> in modo da non essere comprensibile/intelligibile a persone non autorizzate
+> a leggerlo.
+>
+> \- _Wikipedia_
+
+---
+
+# Cifratura Simmetrica
+
+Si parla di cifratura simmetrica quando un messaggio viene codificato attraverso
+l'uso di una _chiave di cifratura segreta_ condivisa tra chi codifica il messaggio e chi
+lo decodifica.
+
+---
+
+# Cifratura Asimettrica
+
+La cifratura è asimmetrica quando la codifica avviene attraverso l'uso di una
+chiave, ma la decodifica avviene attraverso l'uso di una chiave differente.
+
+Le due chiavi sono comunemente chiamate _chiave pubblica_ e _chiave privata_, e
+ad una chiave pubblica corrisponde una sola chiave privata (e vice versa).
+
+---
+
+# Cifratura Asimmetrica
+
+L'uso della chiave **privata** per la cifratura del messaggio permette a chiunque
+di utilizzare la chiave **pubblica** per decifrarlo.
+
+Dal momento che solo chi è in possesso della chiave privata può generare un
+messaggio decifrabile con la chiave pubblica, l'uso di questo sistema garantisce
+la _provenienza_.
+
+---
+
+# Cifratura Asimmetrica
+
+L'uso della chiave **pubblica** per la cifratura del messaggio permette a chiunque
+di codificare un messaggio che sarà leggibile solamente da chi possiede la
+corrispondente chiave **privata**.
+
+Dal momento che solo chi possiede la chiave privata potrà leggere il messaggio,
+l'uso di questo sistema garantisce la _segretezza_.
+
+---
+
+# Hash Crittografico
+
+Un _hash_ è il risultato della trasformazione di un input di lunghezza variabile
+in un output di **lunghezza fissa**. L'operazione di trasformazione deve essere
+non invertibile, deterministica e deve essere matematicamente impossibile
+individuare due input che producono lo stesso hash.
+
+---
+
+# Firma Digitale
+
+Firmare digitalmente un dato consiste nell'effettuarne l'hash crittografico e
+cifrarlo utilizzando la propria chiave privata. Chi riceve quindi il dato e la
+corrispondente firma digitale può certificarne la provenienza, oltre il fatto che
+il dato non è stato manipolato da nessuno durante il transito.
+
+---
+
+# Blockchain
+
+## Dettagli Tecnologici
+
+---
+
+# Blocchi
+
+Come dice il nome stesso, una blockchain è una struttura dati composta da una serie
+di blocchi collegati in sequenza l'uno all'altro. Ogni nodo contiene al suo interno
+un certo numero di _transazioni_ tra diversi _account_.
+
+---
+
+# Nodi
+
+In una rete basata su blockchain, un _nodo_ è un attore che partecipa al funzionamento
+della rete in uno o più ruoli. Il ruolo tipicamente coperto da un nodo è quello
+del **miner**
+
+---
+
+# Mining
+
+Il mining è l'operazione attraverso la quale vengono creati i blocchi. Ogni miner
+raccoglie le transazioni in attesa di essere inserite, le verifica e le inserisce
+in un nuovo blocco.
+
+L'inserimento del blocco dipende dal tipo di verifica prevista per la blockchain, e
+tipicamente è uno tra **Proof of Work**, **Proof of Stake** e **Proof of Authority**
+
+---
+
+# Proof of Work (PoW)
+
+È l'algoritmo di mining più diffuso, e si basa sul fatto che ogni miner effettua
+calcoli molto complessi per trovare l'hash di un blocco secondo certe condizioni.
+
+Più miner partecipano alla rete, più l'operazione è complessa. La difficoltà è
+calibrata in maniera tale che il tempo di emissione medio di un blocco sia costante.
+
+---
+
+# Proof of Stake (PoS)
+
+Anziché basarsi sulla potenza di calcolo dei miner, questo algoritmo si basa sulla
+quantità di token posseduti dal nodo che fa _staking_. Più token un nodo mette
+"in gioco", più è alta la probabilità che la verifica di un blocco tocchi a lui,
+e un'eventuale violazione della fiducia comporta la perdita dei token.
+
+---
+
+# Proof of Authority (PoA)
+
+Simile al _Proof of Stake_, prevede che il nodo metta in gioco la propria "identità",
+partendo dal presupposto che associando un nodo ad una persona fisica (o una società)
+nota e reale, questa sia meno propensa a "bruciare" la propria reputazione per
+manipolare i risultati del processo di verifica di un blocco.
